@@ -15,10 +15,12 @@ class HomeWindow {
   ~HomeWindow();
 
   void DisplayWindow();
+  void UpdateWebsite(const char* website);
 
   ImVec4 clear_color;
  private:
 
+  SdlWindowWrapper& sdl_;
   SDL_Texture* texture_;
   int image_width_;
   int image_height_;

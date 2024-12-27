@@ -14,18 +14,8 @@
 
 namespace quicksorter {
 
-HomeWindow::HomeWindow(SdlWindowWrapper& sdl) : clear_color{ImVec4(0.45f, 0.55f, 0.60f, 1.00f)} {
-    SDL_Texture* my_texture;
-    int my_image_width, my_image_height;
-
-    WebView wv {"https://www.example.com"};
-    bool ret = quicksorter::LoadTextureFromFile(
-        "/home/marcus/Devel/quicksorter/quicksorter-cpp/output.png",
-        sdl.renderer(),
-        &texture_,
-        &image_width_,
-        &image_height_);
-    IM_ASSERT(ret);
+HomeWindow::HomeWindow(SdlWindowWrapper& sdl) : clear_color{ImVec4(0.45f, 0.55f, 0.60f, 1.00f)}, sdl_(sdl) {
+  UpdateWebsite("https://en.cppreference.com/w/cpp/container/vector");
 }
 
 HomeWindow::~HomeWindow() {
@@ -83,6 +73,24 @@ void HomeWindow::DisplayWindow() {
     auto& io = ImGui::GetIO();
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::End();
+}
+
+void HomeWindow::UpdateWebsite(const char* website) {
+    // TODO get display dimensions somehow
+    //GdkDisplay *display = gdk_display_get_default();
+    //GdkMonitor *monitor = gdk_display_get_primary_monitor(display);
+    //GdkRectangle geometry;
+    //gdk_monitor_get_geometry(monitor, &geometry);
+    //gtk_window_set_default_size(GTK_WINDOW(window_), geometry.width, geometry.height);
+    WebView wv {website, 1200, 1600};
+    bool ret = quicksorter::LoadTextureFromMemory(
+        wv.data(),
+        wv.data_size(),
+        sdl_.renderer(),
+        &texture_,
+        &image_width_,
+        &image_height_);
+    IM_ASSERT(ret);
 }
 
 }  // namespace quicksorter
